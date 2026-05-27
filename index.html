@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌸 Caprichos & Detalles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', 'Segoe UI', sans-serif;
+      background: #fff5f8;
+      color: #5a3a4a;
+      min-height: 100vh;
+    }
+
+    /* ─── Header ─────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #f9a8c0 0%, #f472a0 50%, #ec6090 100%);
+      padding: 22px 20px 18px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(236, 80, 130, 0.35);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header .store-name {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(160, 30, 80, 0.3);
+    }
+
+    header .store-sub {
+      color: rgba(255,255,255,0.92);
+      font-size: 0.95rem;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* ─── Controls bar ───────────────────────────────────── */
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      max-width: 1100px;
+      margin: 28px auto 18px;
+      padding: 0 20px;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 240px;
+      max-width: 480px;
+    }
+
+    .search-wrap .ico {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.05rem;
+      pointer-events: none;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 13px 18px 13px 44px;
+      border: 2px solid #f9bfd0;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #fff;
+      color: #5a3a4a;
+      outline: none;
+      transition: border-color .25s, box-shadow .25s;
+    }
+
+    #searchInput:focus {
+      border-color: #f472a0;
+      box-shadow: 0 0 0 4px rgba(244,114,160,.15);
+    }
+
+    #searchInput::placeholder { color: #d48fa8; }
+
+    .btn {
+      padding: 13px 22px;
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: .93rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-sort {
+      background: linear-gradient(135deg, #f9a8c0, #f472a0);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(244,114,160,.45);
+    }
+
+    .btn-sort:hover { box-shadow: 0 7px 20px rgba(244,114,160,.55); }
+
+    /* ─── Upload area ─────────────────────────────────────── */
+    .upload-section {
+      max-width: 1100px;
+      margin: 0 auto 24px;
+      padding: 0 20px;
+    }
+
+    .upload-area {
+      background: #fff;
+      border: 3px dashed #f9bfd0;
+      border-radius: 22px;
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .3s;
+    }
+
+    .upload-area:hover,
+    .upload-area.drag-over {
+      background: #fff0f5;
+      border-color: #f472a0;
+    }
+
+    .upload-area .u-icon { font-size: 2.8rem; margin-bottom: 10px; }
+
+    .upload-area h3 {
+      color: #c0537a;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .upload-area p {
+      color: #d48fa8;
+      font-size: .88rem;
+      margin-bottom: 3px;
+    }
+
+    .format-box {
+      display: inline-block;
+      background: #fff5f8;
+      border: 1px solid #f9bfd0;
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-top: 14px;
+      font-size: .84rem;
+      color: #c0537a;
+      line-height: 1.7;
+    }
+
+    .format-box code {
+      background: #f9c8d8;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-weight: 700;
+    }
+
+    #fileInput { display: none; }
+
+    .btn-upload {
+      background: linear-gradient(135deg, #fbb6cc, #f472a0);
+      color: #fff;
+      margin-top: 16px;
+      box-shadow: 0 4px 14px rgba(244,114,160,.4);
+    }
+
+    .btn-upload:hover { box-shadow: 0 7px 20px rgba(244,114,160,.5); }
+
+    /* ─── Stats ──────────────────────────────────────────── */
+    .stats {
+      max-width: 1100px;
+      margin: 0 auto 14px;
+      padding: 0 20px;
+    }
+
+    .stats span {
+      font-weight: 700;
+      color: #c0537a;
+      font-size: .93rem;
+    }
+
+    /* ─── Products grid ──────────────────────────────────── */
+    .products-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 24px;
+    }
+
+    /* ─── Product card ───────────────────────────────────── */
+    .product-card {
+      background: #fff;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(240,100,140,.1);
+      transition: transform .3s, box-shadow .3s;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 36px rgba(240,100,140,.22);
+    }
+
+    .card-img-wrap {
+      width: 100%;
+      padding-top: 100%;
+      position: relative;
+      background: #fff8fb;
+      overflow: hidden;
+    }
+
+    .card-img-wrap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 12px;
+      transition: transform .35s;
+    }
+
+    .product-card:hover .card-img-wrap img { transform: scale(1.06); }
+
+    .card-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(135deg, #fbb6cc, #f472a0);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: .5px;
+      pointer-events: none;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,.92);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: .78rem;
+      color: #f472a0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.12);
+      transition: background .2s, color .2s, transform .2s;
+      z-index: 2;
+    }
+
+    .delete-btn:hover {
+      background: #f472a0;
+      color: #fff;
+      transform: scale(1.12);
+    }
+
+    .card-info { padding: 14px 16px 16px; }
+
+    .card-name {
+      font-size: .9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      line-height: 1.35;
+      margin-bottom: 8px;
+      color: #5a3a4a;
+    }
+
+    .card-price {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #f472a0;
+    }
+
+    .card-price::before {
+      content: '$ ';
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    /* ─── Empty / No results ─────────────────────────────── */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #d48fa8;
+    }
+
+    .empty-state .e-icon { font-size: 4rem; margin-bottom: 14px; opacity: .65; }
+    .empty-state h3 { font-size: 1.25rem; margin-bottom: 8px; color: #c0537a; }
+    .empty-state p { font-size: .9rem; }
+
+    /* ─── Toast ──────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: linear-gradient(135deg, #f9a8c0, #f472a0);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: .92rem;
+      box-shadow: 0 6px 22px rgba(244,114,160,.5);
+      transform: translateY(90px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .4s;
+      z-index: 999;
+      max-width: 320px;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 18px;
+      color: #d48fa8;
+      font-size: .83rem;
+      background: rgba(249,168,192,.12);
+      border-top: 1px solid #f9d0de;
+    }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 580px) {
+      header .store-name { font-size: 1.6rem; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .controls { flex-direction: column; align-items: stretch; }
+      .search-wrap { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="store-name">🌸 Caprichos & Detalles 🌸</div>
+    <div class="store-sub">✨ Todo lo que necesitas para tu día a día ✨</div>
+  </header>
+
+  <!-- ── Controls ── -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="ico">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar producto…" autocomplete="off" />
+    </div>
+    <button class="btn btn-sort" id="sortBtn">
+      <span id="sortLabel">Ordenar por precio</span>
+      <span id="sortArrow">↕</span>
+    </button>
+  </div>
+
+  <!-- ── Upload section ── -->
+  <div class="upload-section" id="uploadSection">
+    <div class="upload-area" id="uploadArea">
+      <div class="u-icon">📂</div>
+      <h3>Agregar productos</h3>
+      <p>Arrastra las imágenes aquí o haz clic para seleccionar</p>
+      <p>Puedes cargar varias imágenes a la vez</p>
+      <div class="format-box">
+        📌 El nombre del archivo debe seguir este formato:<br />
+        <code>NOMBRE DEL PRODUCTO_PRECIO.png</code><br />
+        Ejemplos: &nbsp;<code>RESALTADOR ROSA_4500.PNG</code> &nbsp;|&nbsp; <code>ESFERO AZUL_1200.jpg</code>
+      </div>
+      <button class="btn btn-upload" id="selectBtn">📁 Seleccionar imágenes</button>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" multiple />
+  </div>
+
+  <!-- ── Stats ── -->
+  <div class="stats">
+    <span id="productCount">0 productos</span>
+  </div>
+
+  <!-- ── Products ── -->
+  <div class="products-wrap">
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer>🌸 Cacharrería Rosa &copy; 2025 &mdash; Hecho con amor 🌸</footer>
+
+  <!-- ── Toast ── -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ──────────────────────────────────────────────────────────
+       Estado global
+    ────────────────────────────────────────────────────────── */
+    const STORAGE_KEY = 'cachacheriaRosa_v1';
+    let products   = [];
+    let nextId     = 1;
+    let sortOrder  = 'none'; // 'none' | 'asc' | 'desc'
+    let toastTimer = null;
+    let githubMode = false;  // true cuando carga desde productos.json (GitHub Pages)
+
+    /* ──────────────────────────────────────────────────────────
+       Inicialización dual:
+         • Modo GitHub Pages → lee productos.json del repositorio
+         • Modo local        → usa localStorage del navegador
+    ────────────────────────────────────────────────────────── */
+    async function init() {
+      try {
+        const res = await fetch('productos.json?v=' + Date.now());
+        if (!res.ok) throw new Error('sin json');
+        const filenames = await res.json();
+        if (!Array.isArray(filenames)) throw new Error('json inválido');
+
+        // ── Modo GitHub Pages ──────────────────────────────────
+        githubMode = true;
+        document.getElementById('uploadSection').style.display = 'none';
+
+        products = filenames
+          .map((filename, idx) => {
+            const parsed = parseFilename(String(filename));
+            if (!parsed) return null;
+            return {
+              id:    idx + 1,
+              name:  parsed.name,
+              price: parsed.price,
+              image: 'productos/' + encodeURIComponent(String(filename))
+            };
+          })
+          .filter(Boolean);
+
+        nextId = products.length + 1;
+        renderProducts();
+      } catch (_) {
+        // ── Modo local (localStorage) ──────────────────────────
+        githubMode = false;
+        document.getElementById('uploadSection').style.display = '';
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) {
+              products = parsed;
+              if (products.length > 0)
+                nextId = Math.max(...products.map(p => p.id)) + 1;
+            }
+          }
+        } catch (_2) { products = []; }
+        renderProducts();
+      }
+    }
+
+    function saveProducts() {
+      if (githubMode) return;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+      } catch (_) {
+        showToast('⚠️ Almacenamiento lleno. Elimina productos para liberar espacio.');
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Parseo del nombre de archivo
+       Formato esperado:  NOMBRE DEL PRODUCTO_PRECIO.ext
+       El separador es el ÚLTIMO guion bajo encontrado.
+    ────────────────────────────────────────────────────────── */
+    function parseFilename(filename) {
+      // Quitar extensión
+      const withoutExt = filename.replace(/\.[^/.]+$/, '');
+      // Buscar el último underscore
+      const lastUnderscore = withoutExt.lastIndexOf('_');
+      if (lastUnderscore <= 0) return null;
+
+      const rawName  = withoutExt.substring(0, lastUnderscore).trim();
+      const rawPrice = withoutExt.substring(lastUnderscore + 1).trim();
+
+      // Limpiar precio: solo dígitos y punto decimal
+      const price = parseFloat(rawPrice.replace(/[^0-9.]/g, ''));
+
+      if (!rawName || isNaN(price) || price < 0) return null;
+
+      return {
+        name:  rawName.toUpperCase(),
+        price: price
+      };
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Leer archivo como Data URL
+    ────────────────────────────────────────────────────────── */
+    function readAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = e => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('No se pudo leer el archivo'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Procesar archivos seleccionados / arrastrados
+    ────────────────────────────────────────────────────────── */
+    async function handleFiles(files) {
+      let added  = 0;
+      let errors = [];
+
+      for (const file of Array.from(files)) {
+        const parsed = parseFilename(file.name);
+        if (!parsed) {
+          errors.push(file.name);
+          continue;
+        }
+
+        try {
+          const dataUrl = await readAsDataURL(file);
+          const id      = nextId++;
+
+          // Si ya existe un producto con el mismo nombre, reemplazarlo
+          const existingIdx = products.findIndex(
+            p => p.name === parsed.name
+          );
+
+          const product = { id, name: parsed.name, price: parsed.price, image: dataUrl };
+
+          if (existingIdx !== -1) {
+            // Actualizar sin cambiar el orden original
+            products[existingIdx] = { ...product, id: products[existingIdx].id };
+          } else {
+            products.push(product);
+          }
+          added++;
+        } catch (_) {
+          errors.push(file.name);
+        }
+      }
+
+      saveProducts();
+      renderProducts();
+
+      if (added > 0) {
+        showToast(`✅ ${added} producto${added !== 1 ? 's' : ''} agregado${added !== 1 ? 's' : ''}`);
+      }
+      if (errors.length > 0) {
+        const delay = added > 0 ? 2200 : 0;
+        setTimeout(() => {
+          showToast(
+            `⚠️ ${errors.length} archivo${errors.length !== 1 ? 's' : ''} ignorado${errors.length !== 1 ? 's' : ''} ` +
+            `(formato incorrecto)`
+          );
+        }, delay);
+      }
+
+      // Limpiar input para permitir cargar el mismo archivo nuevamente
+      document.getElementById('fileInput').value = '';
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Eliminar producto
+    ────────────────────────────────────────────────────────── */
+    function deleteProduct(id) {
+      products = products.filter(p => p.id !== id);
+      saveProducts();
+      renderProducts();
+      showToast('🗑️ Producto eliminado');
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Ordenar
+    ────────────────────────────────────────────────────────── */
+    function toggleSort() {
+      if (sortOrder === 'asc') {
+        sortOrder = 'desc';
+      } else {
+        sortOrder = 'asc';
+      }
+      updateSortBtn();
+      renderProducts();
+    }
+
+    function updateSortBtn() {
+      const label = document.getElementById('sortLabel');
+      const arrow = document.getElementById('sortArrow');
+      if (sortOrder === 'asc') {
+        label.textContent = 'Precio: menor a mayor';
+        arrow.textContent = '▲';
+      } else if (sortOrder === 'desc') {
+        label.textContent = 'Precio: mayor a menor';
+        arrow.textContent = '▼';
+      } else {
+        label.textContent = 'Ordenar por precio';
+        arrow.textContent = '↕';
+      }
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Formatear precio
+    ────────────────────────────────────────────────────────── */
+    function formatPrice(n) {
+      return Number(n).toLocaleString('es-CO');
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Escapar texto para inserción segura en HTML
+    ────────────────────────────────────────────────────────── */
+    function escText(str) {
+      const div = document.createElement('div');
+      div.appendChild(document.createTextNode(String(str)));
+      return div.innerHTML;
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Renderizar la grilla de productos
+    ────────────────────────────────────────────────────────── */
+    function renderProducts() {
+      const grid    = document.getElementById('productsGrid');
+      const search  = document.getElementById('searchInput').value.toLowerCase().trim();
+      const countEl = document.getElementById('productCount');
+
+      // Filtrar
+      let list = products.filter(p =>
+        !search || p.name.toLowerCase().includes(search)
+      );
+
+      // Ordenar
+      if (sortOrder === 'asc')  list = list.slice().sort((a, b) => a.price - b.price);
+      if (sortOrder === 'desc') list = list.slice().sort((a, b) => b.price - a.price);
+
+      // Contador
+      const total   = products.length;
+      const showing = list.length;
+      if (search || sortOrder !== 'none') {
+        countEl.textContent =
+          `Mostrando ${showing} de ${total} producto${total !== 1 ? 's' : ''}`;
+      } else {
+        countEl.textContent = `${total} producto${total !== 1 ? 's' : ''}`;
+      }
+
+      // Estado vacío
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="e-icon">${total === 0 ? '🛍️' : '🔍'}</div>
+            <h3>${total === 0 ? '¡Aún no hay productos!' : 'Sin resultados'}</h3>
+            <p>${total === 0
+              ? (githubMode
+                  ? 'Agrega imágenes a la carpeta <b>productos/</b> en GitHub y actualiza <b>productos.json</b>.'
+                  : 'Carga imágenes con el nombre en formato NOMBRE_PRECIO.png para comenzar.')
+              : 'Intenta con otro término de búsqueda.'
+            }</p>
+          </div>`;
+        return;
+      }
+
+      // Crear tarjetas de forma segura (sin innerHTML de datos del usuario)
+      const fragment = document.createDocumentFragment();
+
+      list.forEach(p => {
+        // Contenedor de tarjeta
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.productId = p.id;
+
+        // Wrapper imagen
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'card-img-wrap';
+
+        const img = document.createElement('img');
+        img.src     = p.image;        // data URL: seguro
+        img.alt     = p.name;         // texto plano
+        img.loading = 'lazy';
+
+        const badge = document.createElement('span');
+        badge.className   = 'card-badge';
+        badge.textContent = '✦ Disponible';
+
+        imgWrap.appendChild(img);
+        imgWrap.appendChild(badge);
+
+        // Botón eliminar solo en modo local (no aplica en GitHub Pages)
+        if (!githubMode) {
+          const delBtn = document.createElement('button');
+          delBtn.className      = 'delete-btn';
+          delBtn.title          = 'Eliminar producto';
+          delBtn.textContent    = '✕';
+          delBtn.dataset.action = 'delete';
+          imgWrap.appendChild(delBtn);
+        }
+
+        // Info
+        const info  = document.createElement('div');
+        info.className = 'card-info';
+
+        const name  = document.createElement('div');
+        name.className   = 'card-name';
+        name.textContent = p.name;
+
+        const price = document.createElement('div');
+        price.className   = 'card-price';
+        price.textContent = formatPrice(p.price);
+
+        info.appendChild(name);
+        info.appendChild(price);
+
+        card.appendChild(imgWrap);
+        card.appendChild(info);
+        fragment.appendChild(card);
+      });
+
+      grid.innerHTML = '';
+      grid.appendChild(fragment);
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Toast de notificación
+    ────────────────────────────────────────────────────────── */
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    /* ──────────────────────────────────────────────────────────
+       Eventos
+    ────────────────────────────────────────────────────────── */
+
+    // Clic en zona de carga → abrir selector
+    document.getElementById('uploadArea').addEventListener('click', () => {
+      document.getElementById('fileInput').click();
+    });
+
+    // Botón de selección (evita propagación al área para no doble-disparar)
+    document.getElementById('selectBtn').addEventListener('click', e => {
+      e.stopPropagation();
+      document.getElementById('fileInput').click();
+    });
+
+    // Input de archivo
+    document.getElementById('fileInput').addEventListener('change', function () {
+      if (this.files.length > 0) handleFiles(this.files);
+    });
+
+    // Drag & drop
+    const uploadArea = document.getElementById('uploadArea');
+
+    uploadArea.addEventListener('dragover', e => {
+      e.preventDefault();
+      uploadArea.classList.add('drag-over');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('drag-over');
+    });
+
+    uploadArea.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
+    });
+
+    // Búsqueda
+    document.getElementById('searchInput').addEventListener('input', renderProducts);
+
+    // Ordenar
+    document.getElementById('sortBtn').addEventListener('click', toggleSort);
+
+    // Delegación de eventos para botón de eliminar en tarjetas
+    document.getElementById('productsGrid').addEventListener('click', e => {
+      const btn = e.target.closest('[data-action="delete"]');
+      if (!btn) return;
+      const card = btn.closest('[data-product-id]');
+      if (!card) return;
+      deleteProduct(Number(card.dataset.productId));
+    });
+
+    /* ──────────────────────────────────────────────────────────
+       Inicializar
+    ────────────────────────────────────────────────────────── */
+    init();
+  </script>
+</body>
+</html>
