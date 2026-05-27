@@ -238,6 +238,7 @@
       height: 100%;
       object-fit: contain;
       padding: 12px;
+      cursor: zoom-in;
       transition: transform .35s;
     }
 
@@ -341,6 +342,56 @@
 
     .toast.show { transform: translateY(0); opacity: 1; }
 
+    /* ─── Lightbox ───────────────────────────────────────── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      background: rgba(40, 10, 25, .82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      backdrop-filter: blur(4px);
+    }
+
+    .lightbox[hidden] { display: none; }
+
+    .lightbox img {
+      max-width: min(94vw, 980px);
+      max-height: 88vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 20px 44px rgba(0,0,0,.4);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: rgba(255,255,255,.95);
+      color: #f472a0;
+      font-size: 1rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0,0,0,.25);
+      transition: transform .2s, background .2s, color .2s;
+    }
+
+    .lightbox-close:hover {
+      transform: scale(1.08);
+      background: #f472a0;
+      color: #fff;
+    }
+
     /* ─── Footer ─────────────────────────────────────────── */
     footer {
       text-align: center;
@@ -412,10 +463,16 @@
   </div>
 
   <!-- ── Footer ── -->
-  <footer>🌸 Cacharrería Rosa &copy; 2025 &mdash; Hecho con amor 🌸</footer>
+  <footer>🌸 Caprichos & Detalles &copy; 2026 &mdash; Hecho con amor 🌸</footer>
 
   <!-- ── Toast ── -->
   <div class="toast" id="toast"></div>
+
+  <!-- ── Lightbox ── -->
+  <div class="lightbox" id="imageLightbox" hidden aria-hidden="true">
+    <button class="lightbox-close" id="lightboxCloseBtn" type="button" aria-label="Cerrar imagen">✕</button>
+    <img id="lightboxImage" alt="Vista ampliada del producto" />
+  </div>
 
   <script>
     /* ──────────────────────────────────────────────────────────
@@ -697,6 +754,7 @@
         img.src     = p.image;        // data URL: seguro
         img.alt     = p.name;         // texto plano
         img.loading = 'lazy';
+        img.dataset.action = 'zoom';
 
         const badge = document.createElement('span');
         badge.className   = 'card-badge';
@@ -751,6 +809,28 @@
     }
 
     /* ──────────────────────────────────────────────────────────
+       Lightbox de imagen
+    ────────────────────────────────────────────────────────── */
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+
+    function openLightbox(src, alt) {
+      lightboxImage.src = src;
+      lightboxImage.alt = alt || 'Imagen de producto';
+      lightbox.hidden = false;
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      if (lightbox.hidden) return;
+      lightbox.hidden = true;
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxImage.src = '';
+      document.body.style.overflow = '';
+    }
+
+    /* ──────────────────────────────────────────────────────────
        Eventos
     ────────────────────────────────────────────────────────── */
 
@@ -801,6 +881,24 @@
       const card = btn.closest('[data-product-id]');
       if (!card) return;
       deleteProduct(Number(card.dataset.productId));
+    });
+
+    // Abrir imagen ampliada al hacer clic en la foto
+    document.getElementById('productsGrid').addEventListener('click', e => {
+      const zoomImg = e.target.closest('[data-action="zoom"]');
+      if (!zoomImg) return;
+      openLightbox(zoomImg.src, zoomImg.alt);
+    });
+
+    // Cerrar lightbox: botón, fondo o tecla Escape
+    document.getElementById('lightboxCloseBtn').addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
     });
 
     /* ──────────────────────────────────────────────────────────
